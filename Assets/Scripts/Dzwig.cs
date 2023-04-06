@@ -7,29 +7,35 @@ using UnityEngine.UIElements;
 
 public class Dzwig : MonoBehaviour
 {
-    private float speed = 2f;
-    Transform transform;
-    GameObject klon;
-    HingeJoint2D klonhj;
     [SerializeField] GameObject kib;
-    // Start is called before the first frame update
+    [SerializeField] private Transform resp;
+    [SerializeField] private Rigidbody2D hinge;
+    Kible kibelek;
+
     void Start()
     {
-        transform = GetComponent<Transform>();
+        kibelek = Instantiate(kib, resp.position, Quaternion.identity).GetComponent<Kible>();
+        if (kibelek)
+        {
+            kibelek.Odblokuj(false, hinge);
+        }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        if(Input.GetKeyUp(KeyCode.Space))
+        if(Input.GetKeyUp(KeyCode.Space) && kibelek)
         {
-            Instantiate(kib, new Vector3(-0.02f, 5.31f, 0), Quaternion.identity);
-            Debug.Log("cokolwiek");
+            kibelek.Odblokuj(true);
+            kibelek = null;
+            StartCoroutine(StawiajKibla());
         }
-
     }
 
- 
-
-
+    IEnumerator StawiajKibla()
+    {
+        yield return new WaitForSeconds(1);
+        kibelek = Instantiate(kib, resp.position, Quaternion.identity).GetComponent<Kible>();
+        kibelek.Odblokuj(false, hinge);
+    }
 }

@@ -7,22 +7,11 @@ using UnityEngine.UIElements;
 
 public class Kible : MonoBehaviour
 {
-    private Rigidbody2D rb_kibel;
-    private HingeJoint2D hj_kibel;
-    private void Start()
+    public void Odblokuj(bool locked, Rigidbody2D hinge = null)
     {
-        rb_kibel = GetComponent<Rigidbody2D>();
-        hj_kibel = GetComponent<HingeJoint2D>();
- 
+        GetComponent<Rigidbody2D>().simulated = true;
+        GetComponent<HingeJoint2D>().enabled = !locked;
+        GetComponent<HingeJoint2D>().connectedBody = hinge;
     }
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            hj_kibel.enabled = false;
-        }
-    }
-
 
 }
