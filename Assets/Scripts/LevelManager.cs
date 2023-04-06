@@ -57,6 +57,16 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("Win!");
         player.KillPlayer();
-        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex+1);
+
+        int levels = PlayerPrefs.GetInt("Levels");
+        int thisLevel = SceneManager.GetActiveScene().buildIndex;
+        if (levels < (thisLevel - 1))
+        {
+            levels = thisLevel-1;
+            PlayerPrefs.SetInt("Levels", levels);
+            PlayerPrefs.Save();
+        }
+        
+        SceneManager.LoadSceneAsync(thisLevel + 1);
     }
 }

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Vector2 rawMovementInput = Vector2.zero;
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private SpriteRenderer sprite;
 
     [Header("movement")]
     [SerializeField] private float maxSpeed = 1;
@@ -41,6 +42,8 @@ public class Player : MonoBehaviour
     public void HandlePlayerMovementInput(InputAction.CallbackContext context)
     {
         rawMovementInput = context.ReadValue<Vector2>();
+        if(rawMovementInput.x<0) sprite.flipX= true;
+        if (rawMovementInput.x > 0) sprite.flipX = false;
     }
     public void HandlePlayerJumpInput(InputAction.CallbackContext context)
     {
@@ -60,7 +63,7 @@ public class Player : MonoBehaviour
             {
                 
                 float angle = AtanAngle(cpD.point, transform.position); 
-                if (angle < -2.1f && angle > -2.3f) 
+                if (angle < -2f && angle > -2.4f) 
                 {
                     //Debug.DrawLine(cpD.point, cpD.point + (Vector2.up * 0.5f), Color.red, 3);
                     //Debug.DrawLine(transform.position, transform.position + (Vector3.up * 0.5f), Color.yellow, 3);
