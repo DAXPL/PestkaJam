@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
             {
                 
                 float angle = AtanAngle(cpD.point, transform.position); 
-                if (angle < -0.3f && angle > -2.5f) 
+                if (angle < -0.1f && angle > -2.6f) 
                 {
                     //Debug.DrawLine(cpD.point, cpD.point + (Vector2.up * 0.5f), Color.red, 3);
                     //Debug.DrawLine(transform.position, transform.position + (Vector3.up * 0.5f), Color.yellow, 3);
