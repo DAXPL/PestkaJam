@@ -9,8 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: 3ebae6a337248d444ba5b6fc423a3540
   - enabled: 1
-    path: Assets/Scenes/MiloszScena.unity
-    guid: 84e86575c65c0024987f1c02d1c72149
+    path: Assets/Scenes/level1.unity
+    guid: b2a2a309a095a224cbd0c86df70918a2
+  - enabled: 1
+    path: Assets/Scenes/level2.unity
+    guid: 479a72610069902469038d62928d20a7
+  - enabled: 1
+    path: Assets/Scenes/Level3.unity
+    guid: c186754a1a0cfc448a13515e24e76093
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: 5fb0179a1fd8edc42a965aad709eb27b

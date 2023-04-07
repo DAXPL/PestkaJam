@@ -47,6 +47,11 @@ public class LevelManager : MonoBehaviour
             GameOverUI.SetActive(true);
         }
     }
+    public void LockPlayer(bool state)
+    {
+        Debug.Log($"LOCK! {state}");
+        player.LockPlayerMovement(state);
+    }
 
     public void RestartLevel()
     {
@@ -60,10 +65,9 @@ public class LevelManager : MonoBehaviour
 
         int levels = PlayerPrefs.GetInt("Levels");
         int thisLevel = SceneManager.GetActiveScene().buildIndex;
-        if (levels < (thisLevel - 1))
+        if (levels < thisLevel)
         {
-            levels = thisLevel-1;
-            PlayerPrefs.SetInt("Levels", levels);
+            PlayerPrefs.SetInt("Levels", thisLevel);
             PlayerPrefs.Save();
         }
         

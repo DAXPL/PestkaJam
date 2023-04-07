@@ -1,10 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class OnClickPipe : MonoBehaviour {
+    public static OnClickPipe OCP;
     public List<LineRenderer> pipes = new List<LineRenderer>();
+    [SerializeField] private UnityEvent winEvent;
+    bool unlocked = false;
+
+    private void Awake()
+    {
+        OCP= this;
+    }
 
     public void ConnectPipes(GameObject pipe) {
         if (pipe.GetComponent<PipeInfo>().used) {
@@ -27,7 +36,6 @@ public class OnClickPipe : MonoBehaviour {
     }
 
     IEnumerator CheckColors(GameObject pipe) {
-        yield return new WaitForSeconds(2);
 
         if (pipes[1].GetComponent<PipeInfo>().color == pipes[0].GetComponent<PipeInfo>().color) {
             pipes[0].GetComponent<Button>().interactable = false;
@@ -55,5 +63,6 @@ public class OnClickPipe : MonoBehaviour {
 
     public void WonTheGame() {
         Debug.Log("YOU WON");
+        winEvent.Invoke();
     }
 }
