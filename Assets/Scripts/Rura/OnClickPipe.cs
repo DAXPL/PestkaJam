@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class OnClickPipe : MonoBehaviour {
     public List<LineRenderer> pipes = new List<LineRenderer>();
 
-
     public void ConnectPipes(GameObject pipe) {
         if (pipe.GetComponent<PipeInfo>().used) {
             return;
@@ -33,7 +32,15 @@ public class OnClickPipe : MonoBehaviour {
         if (pipes[1].GetComponent<PipeInfo>().color == pipes[0].GetComponent<PipeInfo>().color) {
             pipes[0].GetComponent<Button>().interactable = false;
             pipes[1].GetComponent<Button>().interactable = false;
+
+            GetComponent<GeneratePipes>().allPipes.Remove(pipes[0].gameObject);
+            GetComponent<GeneratePipes>().allPipes.Remove(pipes[1].gameObject);
+
             pipes.Clear();
+
+            if (GetComponent<GeneratePipes>().allPipes.Count == 0) {
+                WonTheGame();
+            }
             yield break;
         }
 
@@ -44,5 +51,9 @@ public class OnClickPipe : MonoBehaviour {
         pipes[1].GetComponent<PipeInfo>().used = false;
 
         pipes.Clear();
+    }
+
+    public void WonTheGame() {
+        Debug.Log("YOU WON");
     }
 }

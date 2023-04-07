@@ -10,6 +10,8 @@ public class GeneratePipes : MonoBehaviour {
     public List<Color> pipeColorLeft = new List<Color>();
     public List<Color> pipeColorRight = new List<Color>();
 
+    public List<GameObject> allPipes = new List<GameObject>();
+
     private void Start() {
         AddColors(pipeColorLeft);
         AddColors(pipeColorRight);
@@ -32,6 +34,7 @@ public class GeneratePipes : MonoBehaviour {
     private void CreateAPipe(int color, Transform columne, List<Color> pipeColor) {
         GameObject pipe = Instantiate(pipePrefab, columne);
         pipe.GetComponent<PipeInfo>().color = pipeColor[color];
+        allPipes.Add(pipe);
     }
 
     public void AddColors(List<Color> pipeColor) {
