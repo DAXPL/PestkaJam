@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float acceleration = 0.5f;
     [SerializeField] private float jumpAcceleration = 5f;
-    [SerializeField] private float hitDist = 1;
+    [SerializeField] private ParticleSystem iskryXD;
+    [SerializeField] private ParticleSystem deathParticles;
 
     Vector2 capsuleSize = Vector2.zero;
     CapsuleCollider2D col;
@@ -27,12 +28,18 @@ public class Player : MonoBehaviour
         col = GetComponent<CapsuleCollider2D>();
         capsuleSize = col.size;
         rb = GetComponent<Rigidbody2D>();
+        iskryXD.Play();
     }
 
     
     void Update()
     {
         PlayerMove();
+    }
+    private void FixedUpdate()
+    {
+        
+        iskryXD.enableEmission = IsGrounded() && (rb.velocity.magnitude > maxSpeed / 4);
     }
     private void PlayerMove()
     {
@@ -53,11 +60,12 @@ public class Player : MonoBehaviour
             if(IsGrounded())
             {
                 rb.AddForce(jumpAcceleration * Vector2.up, ForceMode2D.Impulse);
+                rb.AddTorque(jumpAcceleration * Random.Range(0.01f, 0.1f) * RandomSign(), ForceMode2D.Impulse);
                 canDoFlip = true;
             }else if (canDoFlip)
             {
                 rb.AddForce(jumpAcceleration * Vector2.up*0.75f, ForceMode2D.Impulse);
-                rb.AddTorque(jumpAcceleration * Random.Range(0.1f, 0.5f) * RandomSign(), ForceMode2D.Impulse);
+                rb.AddTorque(jumpAcceleration * Random.Range(0.1f, 0.3f) * RandomSign(), ForceMode2D.Impulse);
                 canDoFlip = false;
             }
             
@@ -74,18 +82,13 @@ public class Player : MonoBehaviour
             {
                 
                 float angle = AtanAngle(cpD.point, transform.position); 
-                if (angle < -0.3f && angle > -2.4f) 
+                if (angle < -0.3f && angle > -2.5f) 
                 {
                     //Debug.DrawLine(cpD.point, cpD.point + (Vector2.up * 0.5f), Color.red, 3);
                     //Debug.DrawLine(transform.position, transform.position + (Vector3.up * 0.5f), Color.yellow, 3);
                     //Debug.Log(angle);
                     return true;
-                }
-                else
-                {
-                    Debug.Log(angle);
-                }
-                
+                }              
             }            
         }
         return false;
@@ -104,10 +107,24 @@ public class Player : MonoBehaviour
         alive = false;
         if (stop)
         {
-            rb.velocity= Vector2.zero;
-            rb.simulated= false;
+            LockPlayerMovement(true);
+        }
+        deathParticles.Play();
+    }
+    public void LockPlayerMovement(bool state)
+    {
+        if (state)
+        {
+            rb.velocity = Vector2.zero;
             rb.bodyType = RigidbodyType2D.Static;
         }
+        else
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
+            
+        rb.simulated = !state;
+                 
     }
 
 }

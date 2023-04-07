@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class Dzwig : MonoBehaviour
 {
@@ -17,7 +19,17 @@ public class Dzwig : MonoBehaviour
     public int ilekibelkow = 0;
     [SerializeField] private TextMeshProUGUI punkty;
     [SerializeField] private TextMeshProUGUI wygrana;
+    [SerializeField] private UnityEvent winEvent;
+    bool unlocked = false;
 
+    public void UnlockMinigame(bool unlockGame)
+    {
+        unlocked = unlockGame;
+        if(unlocked)
+        {
+            punkty.text = "Press space to drop!";
+        }
+    }
     void Start()
     {
         kibelek = Instantiate(kib, resp.position, Quaternion.identity).GetComponent<Kible>();
@@ -25,22 +37,31 @@ public class Dzwig : MonoBehaviour
         {
             kibelek.Odblokuj(false, this, hinge);
         }
+        punkty.text = "Stack three toilets!";
     }
 
-
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space) && kibelek && ilekibelkow < 4)
+        if (!unlocked) return;
+        if(ilekibelkow<=0) punkty.text = "Press space to drop!";
+        else punkty.text = "Points: " + ilekibelkow;
+
+        if (ilekibelkow >= 3)
+        {
+            punkty.text = "";
+            wygrana.text = "WIN!";
+            winEvent.Invoke();
+        }
+    }
+
+    public void HandleKibelInput(InputAction.CallbackContext context)
+    {
+        if (!unlocked) return;
+        if (kibelek && ilekibelkow < 3)
         {
             kibelek.Odblokuj(true, this);
             kibelek = null;
             StartCoroutine(StawiajKibla());
-        }
-        punkty.text = "Punkty: " + ilekibelkow;
-        if(ilekibelkow == 4)
-        {
-            wygrana.text = "WYGRALES";
-            StartCoroutine(Wygrana());
         }
     }
 
@@ -49,12 +70,6 @@ public class Dzwig : MonoBehaviour
             yield return new WaitForSeconds(1);
             kibelek = Instantiate(kib, resp.position, Quaternion.identity).GetComponent<Kible>();
             kibelek.Odblokuj(false, this, hinge);
-    }
-
-    IEnumerator Wygrana()
-    {
-        yield return new WaitForSeconds(3);
-        SceneManager.LoadScene("SampleScene");
     }
 
 }

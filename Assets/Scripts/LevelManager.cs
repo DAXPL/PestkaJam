@@ -47,6 +47,11 @@ public class LevelManager : MonoBehaviour
             GameOverUI.SetActive(true);
         }
     }
+    public void LockPlayer(bool state)
+    {
+        Debug.Log($"LOCK! {state}");
+        player.LockPlayerMovement(state);
+    }
 
     public void RestartLevel()
     {
