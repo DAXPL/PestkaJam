@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     CapsuleCollider2D col;
     Rigidbody2D rb;
     bool alive = true;
+    bool canDoFlip = false;
 
     void Start()
     {
@@ -47,9 +48,19 @@ public class Player : MonoBehaviour
     }
     public void HandlePlayerJumpInput(InputAction.CallbackContext context)
     {
-        if(context.performed && IsGrounded())
+        if(context.performed)
         {
-            rb.AddForce(jumpAcceleration*Vector2.up, ForceMode2D.Impulse);
+            if(IsGrounded())
+            {
+                rb.AddForce(jumpAcceleration * Vector2.up, ForceMode2D.Impulse);
+                canDoFlip = true;
+            }else if (canDoFlip)
+            {
+                rb.AddForce(jumpAcceleration * Vector2.up*0.75f, ForceMode2D.Impulse);
+                rb.AddTorque(jumpAcceleration * Random.Range(0.1f, 0.5f) * RandomSign(), ForceMode2D.Impulse);
+                canDoFlip = false;
+            }
+            
         }
     }
     private bool IsGrounded()
@@ -63,17 +74,25 @@ public class Player : MonoBehaviour
             {
                 
                 float angle = AtanAngle(cpD.point, transform.position); 
-                if (angle < -2f && angle > -2.4f) 
+                if (angle < -0.3f && angle > -2.4f) 
                 {
                     //Debug.DrawLine(cpD.point, cpD.point + (Vector2.up * 0.5f), Color.red, 3);
                     //Debug.DrawLine(transform.position, transform.position + (Vector3.up * 0.5f), Color.yellow, 3);
                     //Debug.Log(angle);
                     return true;
                 }
+                else
+                {
+                    Debug.Log(angle);
+                }
                 
             }            
         }
         return false;
+    }
+    private int RandomSign()
+    {
+        return (Random.Range(0,2)==1) ? -1 : 1;
     }
     private float AtanAngle(Vector2 a, Vector2 b)
     {
