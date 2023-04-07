@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class OnTrackChoose : MonoBehaviour {
     public GenerateTrainTracks generateTrainTracks;
     public GameObject END;
+    public GameObject jakku;
+    public GameObject morasko;
 
     void Start() {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(15, 0);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(200, 0);
         StartCoroutine(MyOwnUpdateEnumerator());
     }
     
     IEnumerator MyOwnUpdateEnumerator() {
         while (true) {
-            yield return new WaitForSeconds(0.2f);
+            yield return null;
             float distance = Vector3.Distance(transform.position, generateTrainTracks.allTrainTracks[generateTrainTracks.randomTrainTrack].transform.position);
             float distanceToEnd = Vector3.Distance(transform.position, END.transform.position);
 
@@ -35,9 +38,23 @@ public class OnTrackChoose : MonoBehaviour {
 
     public void TrainBreak() {
         Debug.Log("THE TRAIN DIED");
+        StartCoroutine(KampusGaming());
     }
 
     public void OnEndColide() {
         Debug.Log("ENDDDDDDDDDDDDDDDDDDDDDDDDDD");
+        StartCoroutine(JakkuGaming());
+    }
+    IEnumerator JakkuGaming()
+    {
+        jakku.SetActive(true);
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(0);
+    }
+    IEnumerator KampusGaming()
+    {
+        morasko.SetActive(true);
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(0);
     }
 }
