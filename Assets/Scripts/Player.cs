@@ -1,4 +1,3 @@
-using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,16 +5,19 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    [Header("movement")]
     [SerializeField] private Vector2 rawMovementInput = Vector2.zero;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private SpriteRenderer sprite;
-
-    [Header("movement")]
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float acceleration = 0.5f;
     [SerializeField] private float jumpAcceleration = 5f;
     [SerializeField] private ParticleSystem iskryXD;
     [SerializeField] private ParticleSystem deathParticles;
+    [Header("Audio")]
+    [SerializeField] private AudioClip jump;
+    [SerializeField] private AudioClip crash;
+    private AudioSource ass;
 
     Vector2 capsuleSize = Vector2.zero;
     CapsuleCollider2D col;
@@ -29,6 +31,7 @@ public class Player : MonoBehaviour
         capsuleSize = col.size;
         rb = GetComponent<Rigidbody2D>();
         iskryXD.Play();
+        ass = GetComponent<AudioSource>();
     }
 
     
@@ -37,8 +40,8 @@ public class Player : MonoBehaviour
         PlayerMove();
     }
     private void FixedUpdate()
-    {
-        
+    {     
+        //tutaj powinienem sprawdzaæ czy iskry istniej¹
         iskryXD.enableEmission = IsGrounded() && (rb.velocity.magnitude > maxSpeed / 4);
     }
     private void PlayerMove()
@@ -62,11 +65,14 @@ public class Player : MonoBehaviour
                 rb.AddForce(jumpAcceleration * Vector2.up, ForceMode2D.Impulse);
                 rb.AddTorque(jumpAcceleration * Random.Range(0.01f, 0.1f) * RandomSign(), ForceMode2D.Impulse);
                 canDoFlip = true;
-            }else if (canDoFlip)
+                if (ass) ass.PlayOneShot(jump);
+            }
+            else if (canDoFlip)
             {
                 rb.AddForce(jumpAcceleration * Vector2.up*0.75f, ForceMode2D.Impulse);
                 rb.AddTorque(jumpAcceleration * Random.Range(0.1f, 0.3f) * RandomSign(), ForceMode2D.Impulse);
                 canDoFlip = false;
+                if (ass) ass.PlayOneShot(jump);
             }
             
         }
@@ -110,6 +116,7 @@ public class Player : MonoBehaviour
             LockPlayerMovement(true);
         }
         deathParticles.Play();
+        if (ass) ass.PlayOneShot(crash);
     }
     public void LockPlayerMovement(bool state)
     {
